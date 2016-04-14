@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityRepository;
 
 class ConnectionRepository extends EntityRepository
 {
-
     /**
      * @param String $city
      * @param String $year
@@ -57,9 +56,31 @@ class ConnectionRepository extends EntityRepository
     }
 
     /**
-     * @return \Doctrine\ORM\Query
+     * @param Connection $connection
+     * @return Connection
      */
-    public function getFindAllQuery($searchString)
+    public function save(Connection $connection)
+    {
+        $this->getEntityManager()->persist($connection);
+        $this->getEntityManager()->flush();
+
+        return $connection;
+    }
+
+    /**
+     * @param Connection $connection
+     */
+    public function remove(Connection $connection)
+    {
+        $this->getEntityManager()->remove($connection);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @param $searchString
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getFindAllQueryBuilder($searchString)
     {
         $qb = $this
             ->createQueryBuilder('c')
@@ -83,7 +104,6 @@ class ConnectionRepository extends EntityRepository
 
         return $qb
             ->orderBy('c.id', 'desc')
-            ->getQuery()
         ;
     }
 
